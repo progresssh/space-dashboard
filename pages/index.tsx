@@ -1,12 +1,12 @@
-import { LandpadInterface } from "../interfaces/landpad"
+import { LaunchesInterface } from "../interfaces/launches"
 import Title from "../components/Title"
-import List from "../components/lIST"
+import List from "../components/List"
 import { GetServerSideProps } from "next"
 import { NextLaunchInterface } from "../interfaces/nextlaunch"
 import Link from "next/link"
 
 interface ServerSideResult {
-    landpadsData: LandpadInterface[]
+    launchesData: LaunchesInterface[]
     nextLaunchData: NextLaunchInterface
 }
 
@@ -37,7 +37,7 @@ export default function Home(props: ServerSideResult) {
     return (
         <div>
             <Title />
-            <List data={props.landpadsData} />
+            <List data={props.launchesData} />
             <Launch data={props.nextLaunchData} />
         </div>
     )
@@ -47,8 +47,10 @@ export const getServerSideProps: GetServerSideProps<
     ServerSideResult
 > = async () => {
     // Fetch data from external API
-    const landpadsRes = await fetch(`https://api.spacexdata.com/v4/landpads`)
-    const landpadsData = await landpadsRes.json()
+    const launchesRes = await fetch(
+        `https://api.spacexdata.com/v4/launches/past`,
+    )
+    const launchesData = await launchesRes.json()
 
     const nextLaunchRes = await fetch(
         `https://api.spacexdata.com/v5/launches/next`,
@@ -58,5 +60,5 @@ export const getServerSideProps: GetServerSideProps<
     console.log(nextLaunchData)
 
     // Pass data to the page via props
-    return { props: { landpadsData, nextLaunchData } }
+    return { props: { launchesData, nextLaunchData } }
 }
