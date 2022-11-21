@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from "react"
 import { LaunchesInterface } from "../interfaces/launches"
-import { LaunchesQueryInterface } from "../interfaces/launchesQuery"
+import { Doc } from "../interfaces/launchesQuery"
 import Item from "./Item"
 interface ListInterface {
-    data: LaunchesQueryInterface
+    data: Doc[]
     setActiveItem: Dispatch<SetStateAction<LaunchesInterface | null>>
 }
 
@@ -11,7 +11,7 @@ function List({ data, setActiveItem }: ListInterface) {
     return (
         <div>
             <ul>
-                {data.docs.map((item) => {
+                {data.map((item) => {
                     return (
                         <Item
                             key={item.id}

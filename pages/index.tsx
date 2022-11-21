@@ -1,51 +1,35 @@
 import Title from "../components/Title"
 import List from "../components/List"
-import { GetServerSideProps } from "next"
-import { NextLaunchInterface } from "../interfaces/nextlaunch"
-import Link from "next/link"
+import next, { GetServerSideProps } from "next"
 import { RequestInit } from "next/dist/server/web/spec-extension/request"
 import { LaunchesQueryInterface } from "../interfaces/launchesQuery"
 import { useState } from "react"
 import { LaunchesInterface } from "../interfaces/launches"
-import ActiveItem from "../components/ActiveItem"
+import { Launch } from "../components/Launch"
+import Button from "../components/Button"
 
 interface ServerSideResult {
     launchesData: LaunchesQueryInterface
-    nextLaunchData: NextLaunchInterface
-}
-
-function Launch({ data }: { data: NextLaunchInterface }) {
-    const today = new Date().valueOf
-    const date = data.date_utc
-
-    return (
-        <div className="font-extrabold">
-            <p>
-                {date.valueOf <= today ? (
-                    <Link
-                        className="text-green-500"
-                        href={data.links.webcast}
-                        target="_blank"
-                    >
-                        {data.name} - Launch Complete
-                    </Link>
-                ) : (
-                    date.toString()
-                )}
-            </p>
-        </div>
-    )
+    nextLaunchData: LaunchesInterface
 }
 
 export default function Home(props: ServerSideResult) {
-    const [activeItem, setActiveItem] = useState<LaunchesInterface | null>(null)
+    const invertedLaunchesData = props.launchesData.docs.reverse()
+
+    const nextLaunchData = props.nextLaunchData
+    const [activeItem, setActiveItem] = useState<LaunchesInterface | null>(
+        nextLaunchData,
+    )
 
     return (
-        <div>
+        <div className="flex flex-row">
             <Title />
-            <ActiveItem activeItem={activeItem} />
-            <List data={props.launchesData} setActiveItem={setActiveItem} />
-            <Launch data={props.nextLaunchData} />
+            <Button
+                nextLaunchData={props.nextLaunchData}
+                setActiveItem={setActiveItem}
+            />
+            <List data={invertedLaunchesData} setActiveItem={setActiveItem} />
+            <Launch activeItem={activeItem} />
         </div>
     )
 }
@@ -62,6 +46,8 @@ export const getServerSideProps: GetServerSideProps<
             limit: 500,
             select: {
                 name: 1,
+                date_utc: 1,
+                success: 1,
             },
         },
     }

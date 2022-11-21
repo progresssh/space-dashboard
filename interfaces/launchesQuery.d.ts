@@ -15,4 +15,6 @@ export interface LaunchesQueryInterface {
 export interface Doc {
     name: string
     id: string
+    date_utc: Date
+    success: boolean
 }
