@@ -14,8 +14,6 @@ interface ServerSideResult {
 }
 
 export default function Home(props: ServerSideResult) {
-    const invertedLaunchesData = props.launchesData.docs.reverse()
-
     const nextLaunchData = props.nextLaunchData
     const [activeItem, setActiveItem] = useState<LaunchesInterface | null>(
         nextLaunchData,
@@ -28,7 +26,10 @@ export default function Home(props: ServerSideResult) {
                 nextLaunchData={props.nextLaunchData}
                 setActiveItem={setActiveItem}
             />
-            <List data={invertedLaunchesData} setActiveItem={setActiveItem} />
+            <List
+                data={props.launchesData.docs}
+                setActiveItem={setActiveItem}
+            />
             <Launch activeItem={activeItem} />
         </div>
     )
@@ -63,7 +64,9 @@ export const getServerSideProps: GetServerSideProps<
             `https://api.spacexdata.com/v4/launches/query`,
             params,
         )
-        launchesData = await launchesRes.json()
+        const data = await launchesRes.json()
+        launchesData = data.docs.reverse()
+
         console.log(launchesData)
     } catch (error) {
         console.error(error)
