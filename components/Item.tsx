@@ -25,15 +25,10 @@ export default function Item({ item, setActiveItem }: ItemInterface) {
 
         if (launchSuccess === false) {
             return "text-red-500"
+        } else if (launchDate.getTime() <= currentDate.getTime()) {
+            return "text-green-300"
         } else {
-            switch (launchDate.getTime() <= currentDate.getTime()) {
-                case true:
-                    return "text-green-300"
-                case false:
-                    return "text-orange-300"
-                default:
-                    break
-            }
+            return "text-orange-300"
         }
     }
 
