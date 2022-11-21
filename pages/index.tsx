@@ -50,6 +50,9 @@ export const getServerSideProps: GetServerSideProps<
                 date_utc: 1,
                 success: 1,
             },
+            sort: {
+                date_utc: "desc",
+            },
         },
     }
 
@@ -64,9 +67,7 @@ export const getServerSideProps: GetServerSideProps<
             `https://api.spacexdata.com/v4/launches/query`,
             params,
         )
-        const data = await launchesRes.json()
-        launchesData = data.docs.reverse()
-
+        launchesData = await launchesRes.json()
         console.log(launchesData)
     } catch (error) {
         console.error(error)
