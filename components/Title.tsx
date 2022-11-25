@@ -1,5 +1,5 @@
 export default function Title() {
-    const title = "SpaceX Dashboard"
+  const title = "SpaceX Dashboard"
 
-    return <h1>{title}</h1>
+  return <h1>{title}</h1>
 }
